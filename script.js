@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const yearElement = document.getElementById("year");
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
     // 1. Highlight Active Nav Link
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
     const navLinks = document.querySelectorAll(".nav-links a");
