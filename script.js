@@ -41,4 +41,30 @@ document.addEventListener("DOMContentLoaded", () => {
             form.reset();
         });
     }
+   const galleryGrid = document.getElementById("galleryGrid");
+    if (galleryGrid) {
+        const galleryData = [
+            { src: "Images/Maize_farm1.jpg", alt: "Maize Field" },
+            { src: "Images/Maizefarm2.png", alt: "Growing Maize" },
+            { src: "Images/cabbage 1.jpg", alt: "Cabbage Patch" },
+            { src: "Images/cabbage 2.jpg", alt: "Fresh Cabbages" },
+            { src: "Images/Machine-Cabbage-Harvesting.jpg", alt: "Machine harvesting Cabbages" },
+            { src: "Images/mango 3.jpg", alt: "Mangoes Farm" },
+            { src: "Images/mango-plant.webp", alt: "Mangoes Farm" },
+            { src: "Images/tomato farm2.jpg", alt: "Tomato Greenhouse" },
+            { src: "Images/tomato farm 3.jpg", alt: "Tomato Farm" },
+            { src: "Images/tomato tomato.jpg", alt: "Tomato Farm" },
+            { src: "Images/dairy 2.jpg", alt: "Dairy Farm" },
+            { src: "Images/dairy 3.png", alt: "Dairy Farm" },
+            { src: "Images/Dairy-cows.jpg", alt: "Dairy Cows" },
+            { src: "Images/Onions nets.webp", alt: "Onion Harvest" },
+            { src: "Images/onionfarm.jpg", alt: "Onion Farm" }
+        ];
+
+        galleryGrid.innerHTML = galleryData.map(item => `
+            <div class="gallery-item">
+                <img src="${item.src}" alt="${item.alt}" loading="lazy">
+            </div>
+        `).join("");
+    } 
 });
