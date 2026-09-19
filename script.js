@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
-    // 1. Highlight Active Nav Link
+
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
     const navLinks = document.querySelectorAll(".nav-links a");
     navLinks.forEach(link => {
@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 2. Contact Form Handling
     const form = document.getElementById("bookingForm");
     const phoneInput = document.getElementById("phone");
     const statusMessage = document.getElementById("statusMessage");
@@ -35,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? fnameInput.charAt(0).toUpperCase() + fnameInput.slice(1).toLowerCase() 
                 : "Valued Customer";
 
-            // Simulate form submission success without PHP backend
             statusMessage.style.display = "block";
-            statusMessage.innerHTML = `Thank you, <strong>${formattedName}</strong>! Your visit request has been received successfully. We will contact you soon with scheduled visiting dates.`;
+            statusMessage.innerHTML = `Thank you, <strong>${formattedName}</strong>! Your visit request has been received successfully.
+             We will contact you soon with scheduled visiting dates.`;
 
             form.reset();
         });

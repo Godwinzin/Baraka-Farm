@@ -281,7 +281,7 @@ ul.about-list, ul.details-list {
 }
 
 .phone-group select {
-    width: 90px;
+    width: 85px;
 }
 
 input[type="text"],
@@ -317,6 +317,9 @@ input:focus, select:focus {
     font-weight: 600;
     text-align: center;
     display: none;
+}
+.must{
+    color: rgb(245, 11, 11);
 }
 
 /* --- Footer --- */
