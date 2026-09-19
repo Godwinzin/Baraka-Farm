@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking & Contact - The Baraka Farm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">The Baraka Farm</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="crops.html">Products</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contacts.html">Booking</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <h2>Book a Visit / Contact Us</h2>
+        <p style="text-align: center; margin-bottom: 2rem;">Please fill out your details below to schedule a visit to the farm.</p>
+
+        <div class="form-container">
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="fname">First Name *</label>
+                    <input type="text" id="fname" name="fname" required placeholder="John">
+                </div>
+
+                <div class="form-group">
+                    <label for="sname">Middle / Surname (Optional)</label>
+                    <input type="text" id="sname" name="sname" placeholder="Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="lname">Last Name *</label>
+                    <input type="text" id="lname" name="lname" required placeholder="Smith">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <div class="phone-group">
+                        <select id="country-code" name="country-code">
+                            <option value="+254">+254 (KE)</option>
+                            <option value="+256">+256 (UG)</option>
+                            <option value="+255">+255 (TZ)</option>
+                            <option value="+250">+250 (RW)</option>
+                            <option value="+1">+1 (US)</option>
+                            <option value="+44">+44 (UK)</option>
+                        </select>
+                        <input type="tel" id="phone" name="phone" maxlength="11" required placeholder="712345678" style="flex:1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="example@gmail.com">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">Submit Details</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+            </form>
+
+            <div id="statusMessage" class="status-message"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; The Baraka Farm. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
