@@ -4,7 +4,7 @@ An interactive, responsive website for **The Baraka Farm**, showcasing sustainab
 
 ---
 
-## 🌾 Features
+## Features
 
 - **Responsive Hero Section:** Eye-catching hero banner featuring background media and dark overlays for optimal readability.
 - **Product Catalog:** Showcases high-quality crops grown using environmentally responsible farming methods.
@@ -13,7 +13,7 @@ An interactive, responsive website for **The Baraka Farm**, showcasing sustainab
 
 ---
 
-## 🛠️ Built With
+## Built With
 
 - **HTML5:** Semantic markup structure.
 - **CSS3:** Custom properties (CSS variables), Flexbox layout, and CSS transitions.
@@ -21,7 +21,7 @@ An interactive, responsive website for **The Baraka Farm**, showcasing sustainab
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 To view and develop this project locally, all you need is a modern web browser (Google Chrome, Firefox, Edge, Safari, etc.).
