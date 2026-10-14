@@ -464,3 +464,18 @@ footer {
         justify-content: space-around;
     }
 }
+.phone-group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.phone-group select {
+    width: 90px;
+    flex-shrink: 0; /* Prevents the dropdown from shrinking weirdly */
+}
+
+.phone-group input[type="tel"] {
+    flex: 1;
+    min-width: 0; /* CRITICAL: Allows flexbox input to shrink below its default content size */
+}
