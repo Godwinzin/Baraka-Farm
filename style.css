@@ -479,3 +479,31 @@ footer {
     flex: 1;
     min-width: 0; /* CRITICAL: Allows flexbox input to shrink below its default content size */
 }
+/* --- Modern Back Arrow Styles --- */
+.back-btn-container {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--light-bg);
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #d0d7de;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+.back-link:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+    transform: translateX(-3px); /* Subtle smooth slide effect to the left */
+}
