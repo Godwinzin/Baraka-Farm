@@ -1,4 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
+   const mobileMenuBtn = document.getElementById("mobile-menu");
+    const navLinksContainer = document.getElementById("nav-links");
+
+    if (mobileMenuBtn && navLinksContainer) {
+        // Toggle menu dropdown and X animation on click
+        mobileMenuBtn.addEventListener("click", (event) => {
+            event.stopPropagation(); // Prevent click from triggering document listener
+            navLinksContainer.classList.toggle("active");
+            mobileMenuBtn.classList.toggle("open");
+        });
+
+        // Close menu when clicking any link inside it
+        navLinksContainer.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                navLinksContainer.classList.remove("active");
+                mobileMenuBtn.classList.remove("open");
+            });
+        });
+
+        // Close menu when clicking anywhere else on the page
+        document.addEventListener("click", (event) => {
+            if (!navLinksContainer.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                navLinksContainer.classList.remove("active");
+                mobileMenuBtn.classList.remove("open");
+            }
+        });
+    }
     const yearElement = document.getElementById("year");
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
