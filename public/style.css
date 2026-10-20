@@ -507,3 +507,67 @@ footer {
     border-color: var(--primary-color);
     transform: translateX(-3px); /* Subtle smooth slide effect to the left */
 }
+
+/* --- Admin Page --- */
+input[type="password"] {
+    padding: 0.75rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+#adminMessage {
+    margin: 1rem 0;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+#bookingsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+#bookingsTable th,
+#bookingsTable td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+#bookingsTable th {
+    background-color: var(--primary-dark);
+    color: var(--white);
+}
+
+#bookingsTable tbody tr:hover {
+    background-color: var(--light-bg);
+}
+
+#bookingsTable select {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+}
+
+#bookingsTable button {
+    background-color: #c62828;
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#bookingsTable button:hover {
+    background-color: #8e0000;
+}
+[hidden] { display: none !important; }

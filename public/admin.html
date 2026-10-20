@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Admin - The Baraka Farm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="main-container">
+        <h2>Bookings Admin</h2>
+
+        <div class="form-container">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn">Log in</button>
+            </form>
+            <button id="logoutBtn" class="btn btn-secondary" hidden>Log out</button>
+            <p id="adminMessage"></p>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Phone</th><th>Email</th>
+                        <th>Received</th><th>Status</th><th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="admin.js"></script>
+</body>
+</html>

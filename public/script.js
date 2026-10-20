@@ -53,19 +53,64 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (form) {
-        form.addEventListener("submit", (event) => {
+        form.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const fnameInput = document.getElementById("fname").value.trim();
-            const formattedName = fnameInput 
-                ? fnameInput.charAt(0).toUpperCase() + fnameInput.slice(1).toLowerCase() 
-                : "Valued Customer";
+            // 1. Collect the values from the form
+            const booking = {
+                fname: document.getElementById("fname").value.trim(),
+                sname: document.getElementById("sname").value.trim(),
+                lname: document.getElementById("lname").value.trim(),
+                countryCode: document.getElementById("country-code").value,
+                phone: phoneInput.value.trim(),
+                email: document.getElementById("email").value.trim(),
+            };
 
             statusMessage.style.display = "block";
-            statusMessage.innerHTML = `Thank you, <strong>${formattedName}</strong>! Your visit request has been received successfully.
-             We will contact you soon with scheduled visiting dates.`;
+            statusMessage.textContent = "Sending your request...";
 
-            form.reset();
+            try {
+                // 2. Send it to the server
+                const response = await fetch("/api/bookings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(booking),
+                });
+
+                if (response.status === 400) {
+                    const result = await response.json();
+                    statusMessage.textContent = result.errors.join(" ");
+                    return;
+                }
+
+                if (response.status === 429) {
+                    statusMessage.textContent = "Too many attempts. Please wait a few minutes and try again.";
+                    return;
+                }
+
+                // 3. Check whether the server accepted it
+                if (!response.ok) {
+                    throw new Error("The server rejected the booking");
+                }
+
+                // 4. Show success
+                const name = booking.fname.charAt(0).toUpperCase() + booking.fname.slice(1).toLowerCase();
+                const strong = document.createElement("strong");
+                strong.textContent = name;
+
+                statusMessage.textContent = "";
+                statusMessage.append(
+                    "Thank you, ",
+                    strong,
+                    "! Your visit request has been received successfully. We will contact you soon with scheduled visiting dates."
+                );
+
+                form.reset();
+            } catch (error) {
+                // 5. Show failure
+                statusMessage.textContent = "Sorry, something went wrong. Please try again.";
+                console.error(error);
+            }
         });
     }
    const galleryGrid = document.getElementById("galleryGrid");
