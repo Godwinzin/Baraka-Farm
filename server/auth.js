@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { promisify } from "node:util";
-import db from "./db.js";
+import pool from "./db.js";
 
 const scrypt = promisify(crypto.scrypt);
 
@@ -23,33 +23,34 @@ export async function verifyPassword(password, stored) {
 // ---------- Sessions ----------
 const sha = (text) => crypto.createHash("sha256").update(text).digest("hex");
 
-const insertSession = db.prepare(
-  "INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)"
-);
-const findSession = db.prepare(
-  "SELECT user_id FROM sessions WHERE token_hash = ? AND expires_at > ?"
-);
-const deleteSession = db.prepare("DELETE FROM sessions WHERE token_hash = ?");
-const purgeExpired = db.prepare("DELETE FROM sessions WHERE expires_at <= ?");
+export async function createSession(userId) {
+  await pool.query("DELETE FROM sessions WHERE expires_at <= $1", [Date.now()]);
 
-export function createSession(userId) {
-  purgeExpired.run(Date.now());
   const token = crypto.randomBytes(32).toString("hex");
-  insertSession.run(sha(token), userId, Date.now() + SESSION_MS);
+  await pool.query(
+    "INSERT INTO sessions (token_hash, user_id, expires_at) VALUES ($1, $2, $3)",
+    [sha(token), userId, Date.now() + SESSION_MS]
+  );
   return token; // only the browser holds this; the database keeps its hash
 }
 
-export function destroySession(token) {
-  if (typeof token === "string") deleteSession.run(sha(token));
+export async function destroySession(token) {
+  if (typeof token === "string") {
+    await pool.query("DELETE FROM sessions WHERE token_hash = $1", [sha(token)]);
+  }
 }
 
 // ---------- Middleware ----------
-export function requireAdmin(req, res, next) {
+export async function requireAdmin(req, res, next) {
   const token = req.cookies?.sid;
 
-  if (typeof token !== "string" || !findSession.get(sha(token), Date.now())) {
-    return res.status(401).json({ error: "Unauthorized" });
+  if (typeof token === "string") {
+    const { rowCount } = await pool.query(
+      "SELECT 1 FROM sessions WHERE token_hash = $1 AND expires_at > $2",
+      [sha(token), Date.now()]
+    );
+    if (rowCount > 0) return next();
   }
 
-  next();
+  res.status(401).json({ error: "Unauthorized" });
 }

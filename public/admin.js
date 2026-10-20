@@ -45,7 +45,7 @@ function renderBookings(bookings) {
       cell(fullName),
       cell(`${b.country_code}${b.phone}`),
       cell(b.email),
-      cell(b.created_at)
+      cell(new Date(b.created_at).toLocaleString())
     );
 
     // Status dropdown
@@ -94,6 +94,7 @@ function renderBookings(bookings) {
 }
 
 async function loadBookings() {
+  message.textContent = "Loading bookings...";
   try {
     const bookings = await api("/api/bookings");
     showLoggedIn(true);
