@@ -84,6 +84,7 @@ app.post("/api/logout", async (req, res) => {
 
 // ---------- Booking routes ----------
 app.post("/api/bookings", bookingLimiter, async (req, res) => {
+  console.log("req.ip:", req.ip, "| xff:", req.headers["x-forwarded-for"]);
   const { errors, data } = validateBooking(req.body);
 
   if (errors.length > 0) {
