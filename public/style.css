@@ -522,11 +522,16 @@ input[type="password"]:focus {
     outline: none;
 }
 
-#adminMessage {
+#adminMessage,
+#passwordMessage {
     margin: 1rem 0;
     text-align: center;
     font-weight: 600;
     color: var(--primary-dark);
+}
+
+#passwordSection {
+    margin-top: 2rem;
 }
 
 #bookingsTable {

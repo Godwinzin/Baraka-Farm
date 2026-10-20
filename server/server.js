@@ -5,9 +5,10 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import pool, { initDb } from "./db.js";
-import { validateBooking } from "./validate.js";
+import { validateBooking, validateNewPassword } from "./validate.js";
 import {
-  hashPassword, verifyPassword, createSession, destroySession, requireAdmin, SESSION_MS,
+  hashPassword, verifyPassword, createSession, destroySession,
+  destroyOtherSessions, requireAdmin, SESSION_MS,
 } from "./auth.js";
 
 const app = express();
@@ -33,6 +34,15 @@ const bookingLimiter = rateLimit({
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many failed attempts. Try again later." },
+});
+
+const passwordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
   skipSuccessfulRequests: true,
   standardHeaders: true,
   legacyHeaders: false,
@@ -83,6 +93,35 @@ app.post("/api/logout", async (req, res) => {
   await destroySession(req.cookies?.sid);
   res.clearCookie("sid");
   res.status(204).end();
+});
+
+app.post("/api/change-password", requireAdmin, passwordLimiter, async (req, res) => {
+  const currentPassword = req.body?.currentPassword;
+  const newPassword = req.body?.newPassword;
+
+  const errors = validateNewPassword(currentPassword, newPassword);
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
+
+  const { rows } = await pool.query(
+    "SELECT password_hash FROM users WHERE id = $1",
+    [req.userId]
+  );
+
+  const correct =
+    rows.length > 0 && (await verifyPassword(currentPassword, rows[0].password_hash));
+
+  if (!correct) {
+    return res.status(403).json({ error: "Current password is incorrect." });
+  }
+
+  const newHash = await hashPassword(newPassword);
+  await pool.query("UPDATE users SET password_hash = $1 WHERE id = $2", [newHash, req.userId]);
+
+  await destroyOtherSessions(req.userId, req.cookies.sid);
+
+  res.json({ message: "Password changed" });
 });
 
 // ---------- Booking routes ----------

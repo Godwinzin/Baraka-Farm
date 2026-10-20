@@ -38,3 +38,20 @@ export function validateBooking(body) {
 
   return { errors, data };
 }
+export function validateNewPassword(currentPassword, newPassword) {
+  const errors = [];
+
+  if (typeof currentPassword !== "string" || currentPassword === "") {
+    errors.push("Current password is required.");
+  }
+
+  if (typeof newPassword !== "string") {
+    errors.push("New password is required.");
+  } else {
+    if (newPassword.length < 10) errors.push("New password must be at least 10 characters.");
+    if (newPassword.length > 200) errors.push("New password is too long.");
+    if (newPassword === currentPassword) errors.push("New password must be different from the current one.");
+  }
+
+  return errors;
+}

@@ -45,12 +45,24 @@ export async function requireAdmin(req, res, next) {
   const token = req.cookies?.sid;
 
   if (typeof token === "string") {
-    const { rowCount } = await pool.query(
-      "SELECT 1 FROM sessions WHERE token_hash = $1 AND expires_at > $2",
+    const { rows } = await pool.query(
+      "SELECT user_id FROM sessions WHERE token_hash = $1 AND expires_at > $2",
       [sha(token), Date.now()]
     );
-    if (rowCount > 0) return next();
+
+    if (rows.length > 0) {
+      req.userId = rows[0].user_id; // NEW: pass the identity forward
+      return next();
+    }
   }
 
   res.status(401).json({ error: "Unauthorized" });
+}
+
+// NEW: log out every session of this user except the one making the request
+export async function destroyOtherSessions(userId, currentToken) {
+  await pool.query(
+    "DELETE FROM sessions WHERE user_id = $1 AND token_hash <> $2",
+    [userId, sha(currentToken)]
+  );
 }

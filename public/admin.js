@@ -2,11 +2,20 @@ const STATUSES = ["new", "contacted", "confirmed", "cancelled"];
 
 const loginForm = document.getElementById("loginForm");
 const logoutBtn = document.getElementById("logoutBtn");
+const passwordSection = document.getElementById("passwordSection");
+const passwordForm = document.getElementById("passwordForm");
+const passwordMessage = document.getElementById("passwordMessage");
 
 function showLoggedIn(loggedIn) {
   loginForm.hidden = loggedIn;
   logoutBtn.hidden = !loggedIn;
-  if (!loggedIn) tbody.replaceChildren();
+  passwordSection.hidden = !loggedIn;
+
+  if (!loggedIn) {
+    tbody.replaceChildren();
+    passwordForm.reset();
+    passwordMessage.textContent = "";
+  }
 }
 const message = document.getElementById("adminMessage");
 const tbody = document.querySelector("#bookingsTable tbody");
@@ -92,6 +101,48 @@ function renderBookings(bookings) {
 
   tbody.replaceChildren(...rows);
 }
+
+passwordForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const currentPassword = document.getElementById("currentPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (newPassword !== confirmPassword) {
+    passwordMessage.textContent = "The new passwords do not match.";
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    if (response.status === 401) {
+      showLoggedIn(false);
+      message.textContent = "Please log in.";
+      return;
+    }
+    if (response.status === 429) {
+      passwordMessage.textContent = "Too many attempts. Try again later.";
+      return;
+    }
+    if (response.status === 400 || response.status === 403) {
+      const result = await response.json();
+      passwordMessage.textContent = result.errors ? result.errors.join(" ") : result.error;
+      return;
+    }
+    if (!response.ok) throw new Error("Request failed");
+
+    passwordForm.reset();
+    passwordMessage.textContent = "Password changed. Other devices have been logged out.";
+  } catch (error) {
+    passwordMessage.textContent = "Could not change the password. Please try again.";
+  }
+});
 
 async function loadBookings() {
   message.textContent = "Loading bookings...";
