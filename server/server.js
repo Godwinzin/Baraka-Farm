@@ -1,3 +1,4 @@
+import { sendBookingNotification } from "./email.js";
 import express from "express";
 import path from "node:path";
 import helmet from "helmet";
@@ -98,8 +99,14 @@ app.post("/api/bookings", bookingLimiter, async (req, res) => {
      RETURNING id`,
     [data.fname, data.sname, data.lname, data.countryCode, data.phone, data.email]
   );
+  const id = rows[0].id; // store the id in a variable
 
-  res.status(201).json({ message: "Booking received", id: rows[0].id });
+  res.status(201).json({ message: "Booking received", id }); // CHANGED: uses the variable
+
+  // NEW: after replying, send the email without making the visitor wait
+  sendBookingNotification(data, id).catch((error) => {
+    console.error("Notification email failed:", error.message);
+  });
 });
 
 app.get("/api/bookings", requireAdmin, async (req, res) => {
@@ -177,4 +184,5 @@ await initDb();
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log("Database host:", new URL(process.env.DATABASE_URL).host);
 });
