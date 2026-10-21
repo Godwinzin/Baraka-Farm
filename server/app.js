@@ -39,9 +39,13 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
   skipSuccessfulRequests: true,
+  skip: skipInTests,
+  keyGenerator: (req) =>
+    typeof req.body?.username === "string"
+      ? req.body.username.trim().toLowerCase().slice(0, 100)
+      : "no-username",
   standardHeaders: true,
   legacyHeaders: false,
-  skip: skipInTests,
   message: { error: "Too many failed attempts. Try again later." },
 });
 
@@ -53,6 +57,16 @@ const passwordLimiter = rateLimit({
   legacyHeaders: false,
   skip: skipInTests,
   message: { error: "Too many failed attempts. Try again later." },
+});
+
+const bookingGlobalLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 40,
+  skip: skipInTests,
+  keyGenerator: () => "all-visitors",
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please try again later." },
 });
 
 // ---------- Helpers ----------
@@ -131,8 +145,7 @@ app.post("/api/change-password", requireAdmin, passwordLimiter, async (req, res)
 });
 
 // ---------- Booking routes ----------
-app.post("/api/bookings", bookingLimiter, async (req, res) => {
-  console.log("req.ip:", req.ip, "| xff:", req.headers["x-forwarded-for"]);
+app.post("/api/bookings",bookingGlobalLimiter, bookingLimiter, async (req, res) => {
   const { errors, data } = validateBooking(req.body);
 
   if (errors.length > 0) {
