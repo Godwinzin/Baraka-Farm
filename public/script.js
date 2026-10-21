@@ -60,13 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault();
 
             // 1. Collect the values from the form
-            const booking = {
+           const booking = {
                 fname: document.getElementById("fname").value.trim(),
                 sname: document.getElementById("sname").value.trim(),
                 lname: document.getElementById("lname").value.trim(),
                 countryCode: document.getElementById("country-code").value,
                 phone: phoneInput.value.trim(),
                 email: document.getElementById("email").value.trim(),
+                website: document.getElementById("website").value, // honeypot
             };
 
             statusMessage.style.display = "block";

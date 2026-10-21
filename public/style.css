@@ -601,3 +601,10 @@ input[type="password"]:focus {
     opacity: 0.5;
     cursor: not-allowed;
 }
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

@@ -146,6 +146,12 @@ app.post("/api/change-password", requireAdmin, passwordLimiter, async (req, res)
 
 // ---------- Booking routes ----------
 app.post("/api/bookings",bookingGlobalLimiter, bookingLimiter, async (req, res) => {
+  // Honeypot: real visitors never see this field, so any value means a bot
+  if (typeof req.body?.website === "string" && req.body.website.trim() !== "") {
+    console.log("Honeypot triggered");
+    return res.status(201).json({ message: "Booking received" });
+  }
+
   const { errors, data } = validateBooking(req.body);
 
   if (errors.length > 0) {

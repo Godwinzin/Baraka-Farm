@@ -73,4 +73,17 @@ describe("public API", () => {
     assert.equal(rows[0].fname, "JOHN");
     assert.equal(rows[0].status, "new");
   });
+
+  test("a filled honeypot field pretends to succeed but saves nothing", async () => {
+  const before = await pool.query("SELECT count(*)::int AS n FROM bookings");
+
+  const res = await postJson(`${ctx.baseUrl}/api/bookings`, {
+    ...validBooking,
+    website: "http://spam.example",
+  });
+  assert.equal(res.status, 201);
+
+  const after = await pool.query("SELECT count(*)::int AS n FROM bookings");
+  assert.equal(after.rows[0].n, before.rows[0].n);
+});
 });

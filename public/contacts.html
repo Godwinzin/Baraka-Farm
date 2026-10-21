@@ -71,6 +71,12 @@
                     <input type="email" id="email" name="email" placeholder="example@gmail.com">
                 </div>
 
+                <!-- catch bots that load the page in a real browser engine and fill every input, -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="website">Leave this field empty</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn">Submit Details</button>
                     <button type="reset" class="btn btn-secondary">Reset</button>
