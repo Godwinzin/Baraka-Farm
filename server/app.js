@@ -16,7 +16,7 @@ const app = express();
 
 // Render has 3 proxy hops in front of the app (measured from logs).
 // Recheck if rate limiting ever seems wrong after a Render change.
-app.set("trust proxy", 3);
+app.set("trust proxy", 4);
 app.use(helmet());
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
