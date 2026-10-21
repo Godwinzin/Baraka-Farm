@@ -8,9 +8,9 @@ export function validateBooking(body) {
   const errors = [];
 
   const data = {
-    fname: clean(input.fname),
-    sname: clean(input.sname),
-    lname: clean(input.lname),
+    fname: clean(input.fname).toUpperCase(),
+    sname: clean(input.sname).toUpperCase(),
+    lname: clean(input.lname).toUpperCase(),
     countryCode: clean(input.countryCode),
     phone: clean(input.phone),
     email: clean(input.email),
