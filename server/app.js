@@ -154,10 +154,52 @@ app.post("/api/bookings", bookingLimiter, async (req, res) => {
 });
 
 app.get("/api/bookings", requireAdmin, async (req, res) => {
-  const { rows } = await pool.query(
-    `SELECT ${BOOKING_COLUMNS} FROM bookings ORDER BY id DESC`
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize, 10) || 20));
+
+  const search =
+    typeof req.query.search === "string" ? req.query.search.trim().slice(0, 100) : "";
+  const status = ALLOWED_STATUSES.includes(req.query.status) ? req.query.status : "";
+
+  const conditions = [];
+  const params = [];
+
+  if (search) {
+    // Escape LIKE wildcards so a typed % or _ is treated as plain text
+    params.push(`%${search.replace(/[\\%_]/g, "\\$&")}%`);
+    const n = params.length;
+    conditions.push(
+      `(fname ILIKE $${n} OR sname ILIKE $${n} OR lname ILIKE $${n} OR phone ILIKE $${n} OR email ILIKE $${n})`
+    );
+  }
+
+  if (status) {
+    params.push(status);
+    conditions.push(`status = $${params.length}`);
+  }
+
+  const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+  const countResult = await pool.query(
+    `SELECT count(*)::int AS total FROM bookings ${where}`,
+    params
   );
-  res.json(rows);
+  const total = countResult.rows[0].total;
+
+  const { rows } = await pool.query(
+    `SELECT ${BOOKING_COLUMNS} FROM bookings ${where}
+     ORDER BY id DESC
+     LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+    [...params, pageSize, (page - 1) * pageSize]
+  );
+
+  res.json({
+    bookings: rows,
+    total,
+    page,
+    pageSize,
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
+  });
 });
 
 app.get("/api/bookings/:id", requireAdmin, async (req, res) => {

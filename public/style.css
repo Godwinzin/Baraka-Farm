@@ -576,3 +576,28 @@ input[type="password"]:focus {
     background-color: #8e0000;
 }
 [hidden] { display: none !important; }
+.filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.filter-bar input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+}
+
+.pager {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.pager button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

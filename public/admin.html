@@ -28,6 +28,20 @@
             <p id="adminMessage"></p>
         </div>
 
+        <div id="bookingsControls" hidden>
+            <form id="filterForm" class="filter-bar">
+                <input type="text" id="searchInput" placeholder="Search name, phone or email" maxlength="100">
+                <select id="statusFilter">
+                    <option value="">All statuses</option>
+                    <option value="new">new</option>
+                    <option value="contacted">contacted</option>
+                    <option value="confirmed">confirmed</option>
+                    <option value="cancelled">cancelled</option>
+                </select>
+                <button type="submit" class="btn">Search</button>
+            </form>
+        </div>
+
         <div style="overflow-x: auto;">
             <table id="bookingsTable">
                 <thead>
@@ -39,6 +53,13 @@
                 <tbody></tbody>
             </table>
         </div>
+
+        <div id="pager" class="pager" hidden>
+            <button type="button" id="prevBtn" class="btn btn-secondary">Previous</button>
+            <span id="pageInfo"></span>
+            <button type="button" id="nextBtn" class="btn btn-secondary">Next</button>
+        </div>
+
         <div class="form-container" id="passwordSection" hidden>
             <h3>Change password</h3>
             <form id="passwordForm">

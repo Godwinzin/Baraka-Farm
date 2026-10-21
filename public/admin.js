@@ -5,18 +5,33 @@ const logoutBtn = document.getElementById("logoutBtn");
 const passwordSection = document.getElementById("passwordSection");
 const passwordForm = document.getElementById("passwordForm");
 const passwordMessage = document.getElementById("passwordMessage");
+const bookingsControls = document.getElementById("bookingsControls");
+const filterForm = document.getElementById("filterForm");
+const searchInput = document.getElementById("searchInput");
+const statusFilter = document.getElementById("statusFilter");
+const pager = document.getElementById("pager");
+const pageInfo = document.getElementById("pageInfo");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+let currentPage = 1;
 
 function showLoggedIn(loggedIn) {
   loginForm.hidden = loggedIn;
   logoutBtn.hidden = !loggedIn;
   passwordSection.hidden = !loggedIn;
+  bookingsControls.hidden = !loggedIn;
+  pager.hidden = !loggedIn;
 
   if (!loggedIn) {
     tbody.replaceChildren();
     passwordForm.reset();
     passwordMessage.textContent = "";
+    filterForm.reset();
+    currentPage = 1;
   }
 }
+
 const message = document.getElementById("adminMessage");
 const tbody = document.querySelector("#bookingsTable tbody");
 
@@ -147,10 +162,26 @@ passwordForm.addEventListener("submit", async (event) => {
 async function loadBookings() {
   message.textContent = "Loading bookings...";
   try {
-    const bookings = await api("/api/bookings");
+    const params = new URLSearchParams({
+      page: String(currentPage),
+      search: searchInput.value.trim(),
+      status: statusFilter.value,
+    });
+
+    const result = await api(`/api/bookings?${params}`);
     showLoggedIn(true);
-    renderBookings(bookings);
-    message.textContent = `${bookings.length} booking(s)`;
+
+    // e.g. you deleted the last booking on the final page
+    if (result.bookings.length === 0 && result.total > 0 && currentPage > 1) {
+      currentPage = result.totalPages;
+      return loadBookings();
+    }
+
+    renderBookings(result.bookings);
+    message.textContent = `${result.total} booking(s)`;
+    pageInfo.textContent = `Page ${result.page} of ${result.totalPages}`;
+    prevBtn.disabled = result.page <= 1;
+    nextBtn.disabled = result.page >= result.totalPages;
   } catch (error) {
     tbody.replaceChildren();
     message.textContent = error.message;
@@ -191,6 +222,24 @@ logoutBtn.addEventListener("click", async () => {
   await fetch("/api/logout", { method: "POST" });
   showLoggedIn(false);
   message.textContent = "Logged out.";
+});
+
+filterForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  currentPage = 1;
+  loadBookings();
+});
+
+statusFilter.addEventListener("change", () => filterForm.requestSubmit());
+
+prevBtn.addEventListener("click", () => {
+  currentPage -= 1;
+  loadBookings();
+});
+
+nextBtn.addEventListener("click", () => {
+  currentPage += 1;
+  loadBookings();
 });
 
 // If a valid session cookie already exists, show the bookings straight away
