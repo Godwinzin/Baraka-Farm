@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import app from "../server/app.js";
-import pool, { initDb } from "../server/db.js";
+import pool from "../server/db.js";
+import { runMigrations } from "../server/migrate.js";
 
 // Safety: these helpers wipe tables. Refuse to run outside the test setup.
 assert.equal(process.env.NODE_ENV, "test", "Run tests with npm test");
@@ -10,7 +11,7 @@ export async function resetDatabase() {
 }
 
 export async function startTestServer() {
-  await initDb();
+  await runMigrations();
   await resetDatabase();
 
   const server = app.listen(0); // port 0 = let the OS pick a free port

@@ -1,4 +1,5 @@
-import pool, { initDb } from "./db.js";
+import pool from "./db.js";
+import { runMigrations } from "./migrate.js";
 import { hashPassword } from "./auth.js";
 
 const [username, password] = process.argv.slice(2);
@@ -8,7 +9,7 @@ if (!username || !password || password.length < 10) {
   process.exit(1);
 }
 
-await initDb();
+await runMigrations();
 
 const hash = await hashPassword(password);
 

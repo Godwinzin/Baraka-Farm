@@ -1,6 +1,7 @@
-import pool, { initDb } from "./db.js";
+import pool from "./db.js";
+import { runMigrations } from "./migrate.js";
 
-await initDb();
+await runMigrations(); 
 
 const { rows } = await pool.query("SELECT now() AS time");
 console.log("Connected! Database time:", rows[0].time);
