@@ -80,7 +80,7 @@ function parseId(value) {
 }
 
 const BOOKING_COLUMNS =
-  "id, fname, sname, lname, country_code, phone, email, status, created_at";
+  "id, fname, sname, lname, country_code, phone, email, visit_date, status, created_at";
 
 // ---------- Auth routes ----------
 app.post("/api/login", loginLimiter, async (req, res) => {
@@ -159,10 +159,10 @@ app.post("/api/bookings",bookingGlobalLimiter, bookingLimiter, async (req, res) 
   }
 
   const { rows } = await pool.query(
-    `INSERT INTO bookings (fname, sname, lname, country_code, phone, email)
-     VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO bookings (fname, sname, lname, country_code, phone, email, visit_date)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING id`,
-    [data.fname, data.sname, data.lname, data.countryCode, data.phone, data.email]
+    [data.fname, data.sname, data.lname, data.countryCode, data.phone, data.email, data.visitDate]
   );
   const id = rows[0].id; // store the id in a variable
 

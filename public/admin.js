@@ -69,6 +69,7 @@ function renderBookings(bookings) {
       cell(fullName),
       cell(`${b.country_code}${b.phone}`),
       cell(b.email),
+      cell(b.visit_date || "-"),
       cell(new Date(b.created_at).toLocaleString())
     );
 

@@ -56,6 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Wake the backend while the visitor fills in the form
         fetch("/api/health").catch(() => {});
 
+        const visitDateInput = document.getElementById("visitDate");
+        if (visitDateInput) {
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, "0");
+            visitDateInput.min = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+        }
+
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
 
@@ -67,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 countryCode: document.getElementById("country-code").value,
                 phone: phoneInput.value.trim(),
                 email: document.getElementById("email").value.trim(),
+                visitDate: document.getElementById("visitDate").value,
                 website: document.getElementById("website").value, // honeypot
             };
 

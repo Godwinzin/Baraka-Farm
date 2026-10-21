@@ -1,5 +1,8 @@
 import pg from "pg";
 
+
+pg.types.setTypeParser(1082, (value) => value); // 1082 = the DATE type; keep it as "YYYY-MM-DD"
+
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   max: 5,

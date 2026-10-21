@@ -326,6 +326,8 @@ ul.about-list, ul.details-list {
 input[type="text"],
 input[type="email"],
 input[type="tel"],
+input[type="date"],
+input[type="password"],
 select {
     padding: 0.75rem;
     border: 1.5px solid #ccc;
@@ -509,13 +511,6 @@ footer {
 }
 
 /* --- Admin Page --- */
-input[type="password"] {
-    padding: 0.75rem;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
 
 input[type="password"]:focus {
     border-color: var(--primary-color);

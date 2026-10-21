@@ -1,12 +1,14 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import { validateBooking, validateNewPassword } from "../server/validate.js";
+import { isoDate } from "./dates.js";
 
 const validBooking = {
   fname: "john",
   lname: "smith",
   countryCode: "+254",
   phone: "712345678",
+  visitDate: isoDate(7),
 };
 
 describe("validateBooking", () => {
@@ -79,7 +81,7 @@ describe("validateBooking", () => {
 
   test("reports every problem at once", () => {
     const { errors } = validateBooking({});
-    assert.equal(errors.length, 4);
+    assert.equal(errors.length, 5);
   });
 
   test("does not crash when there is no body at all", () => {
@@ -117,5 +119,40 @@ describe("validateNewPassword", () => {
   test("rejects a non-string new password", () => {
     const errors = validateNewPassword("old-password-123", 12345678901);
     assert.ok(errors.includes("New password is required."));
+  });
+});
+describe("visit date", () => {
+  const NOW = new Date("2026-10-21T10:00:00Z"); // 13:00 on 21 Oct in Nairobi
+
+  const check = (visitDate, now = NOW) =>
+    validateBooking({ ...validBooking, visitDate }, now).errors;
+
+  test("is required", () => {
+    assert.ok(check("").includes("Preferred visit date is required."));
+  });
+
+  test("accepts today", () => {
+    assert.deepEqual(check("2026-10-21"), []);
+  });
+
+  test("rejects yesterday", () => {
+    assert.ok(check("2026-10-20").includes("Visit date cannot be in the past."));
+  });
+
+  test("uses the date in Nairobi, not UTC", () => {
+    const lateEvening = new Date("2026-10-21T22:30:00Z"); // already the 22nd in Nairobi
+    assert.ok(check("2026-10-21", lateEvening).includes("Visit date cannot be in the past."));
+  });
+
+  test("rejects an impossible date", () => {
+    assert.ok(check("2026-02-31").includes("Visit date is not a valid date."));
+  });
+
+  test("rejects the wrong format", () => {
+    assert.ok(check("05/11/2026").includes("Visit date is not a valid date."));
+  });
+
+  test("rejects a date more than a year ahead", () => {
+    assert.ok(check("2028-01-01").includes("Visit date is too far ahead."));
   });
 });

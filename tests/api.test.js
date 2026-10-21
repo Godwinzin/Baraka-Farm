@@ -2,12 +2,14 @@ import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
 import pool from "../server/db.js";
 import { startTestServer } from "./helpers.js";
+import { isoDate } from "./dates.js";
 
 const validBooking = {
   fname: "john",
   lname: "smith",
   countryCode: "+254",
   phone: "712345678",
+  visitDate: isoDate(7),
 };
 
 function postJson(url, body) {
@@ -66,12 +68,13 @@ describe("public API", () => {
     assert.equal(typeof body.id, "number");
 
     const { rows } = await pool.query(
-      "SELECT fname, lname, status FROM bookings WHERE id = $1",
+      "SELECT fname, lname, status, visit_date FROM bookings WHERE id = $1",
       [body.id]
     );
     assert.equal(rows.length, 1);
     assert.equal(rows[0].fname, "JOHN");
     assert.equal(rows[0].status, "new");
+    assert.equal(rows[0].visit_date, validBooking.visitDate);
   });
 
   test("a filled honeypot field pretends to succeed but saves nothing", async () => {

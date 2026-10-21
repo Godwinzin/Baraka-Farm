@@ -22,6 +22,7 @@ export async function sendBookingNotification(booking, id) {
     `Name: ${fullName}`,
     `Phone: ${booking.countryCode}${booking.phone}`,
     `Email: ${booking.email || "(not given)"}`,
+    `Preferred visit date: ${booking.visitDate}`,
     "",
     "Open the admin page to manage it.",
   ].join("\n");
