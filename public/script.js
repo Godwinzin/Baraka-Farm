@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (galleryGrid) {
         const galleryData = [
             { src: "Images/Maize_farm1.jpg", alt: "Maize Field" },
-            { src: "Images/Maizefarm2.png", alt: "Growing Maize" },
+            { src: "Images/maizefarm2.png", alt: "Growing Maize" },
             { src: "Images/cabbage 1.jpg", alt: "Cabbage Patch" },
             { src: "Images/cabbage 2.jpg", alt: "Fresh Cabbages" },
             { src: "Images/Machine-Cabbage-Harvesting.jpg", alt: "Machine harvesting Cabbages" },
