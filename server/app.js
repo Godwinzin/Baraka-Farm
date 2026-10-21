@@ -20,8 +20,9 @@ app.set("trust proxy", 3);
 app.use(helmet());
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
-app.use(express.static(path.join(import.meta.dirname, "..", "public")));
-
+if (process.env.NODE_ENV !== "production") {
+  app.use(express.static(path.join(import.meta.dirname, "..", "public")));
+}
 const skipInTests = () => process.env.NODE_ENV === "test";
 
 // ---------- Rate limiters ----------
@@ -253,8 +254,19 @@ app.delete("/api/bookings/:id", requireAdmin, async (req, res) => {
 });
 
 // ---------- Fallbacks ----------
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true });
+});
+
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "Not found" });
+});
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && process.env.FRONTEND_URL && req.method === "GET") {
+    return res.redirect(302, process.env.FRONTEND_URL);
+  }
+  next();
 });
 
 app.use((err, req, res, next) => {

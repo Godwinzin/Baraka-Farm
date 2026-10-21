@@ -53,6 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (form) {
+        // Wake the backend while the visitor fills in the form
+        fetch("/api/health").catch(() => {});
+
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
 
@@ -67,7 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             statusMessage.style.display = "block";
-            statusMessage.textContent = "Sending your request...";
+           statusMessage.textContent = "Sending your request...";
+            const slowTimer = setTimeout(() => {
+            statusMessage.textContent = "Still working. The server is waking up and can take up to a minute...";
+            }, 5000);
 
             try {
                 // 2. Send it to the server
@@ -110,6 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 5. Show failure
                 statusMessage.textContent = "Sorry, something went wrong. Please try again.";
                 console.error(error);
+            }
+            finally {
+                clearTimeout(slowTimer);
             }
         });
     }
