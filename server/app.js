@@ -260,7 +260,7 @@ app.patch("/api/bookings/:id", requireAdmin, async (req, res) => {
   res.json({ message: "Status updated" });
 });
 
-app.delete("/api/bookings/:id", requireAdmin, async (req, res) => {
+app.delete("/api/bookings/:id", async (req, res) => {
   const id = parseId(req.params.id);
   if (id === null) return res.status(404).json({ error: "Booking not found" });
 
