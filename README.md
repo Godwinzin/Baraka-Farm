@@ -8,8 +8,11 @@ A full-stack booking site for a farm: visitors request a visit, the owner gets a
 
 > The first booking request after a quiet spell can take up to a minute, because the free API host sleeps when idle. The booking page wakes it in the background.
 
+**Home page**
 ![Home page](docs/screenshots/home.png)
+**Booking page**
 ![Booking form](docs/screenshots/booking.png)
+**Admin page**
 ![Admin page (sample data)](docs/screenshots/admin.png)
 
 ## What this project demonstrates
