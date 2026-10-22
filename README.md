@@ -1,4 +1,5 @@
 # The Baraka Farm
+![Tests](https://github.com/Godwinzin/Baraka-Farm/actions/workflows/test.yml/badge.svg)
 
 An interactive, responsive website for **The Baraka Farm**, showcasing sustainably grown agricultural produce and farm operations, with a booking system for farm visits.
 
