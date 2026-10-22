@@ -603,3 +603,8 @@ input[type="password"]:focus {
     height: 1px;
     overflow: hidden;
 }
+.form-note {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+}
