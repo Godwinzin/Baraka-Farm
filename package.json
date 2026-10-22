@@ -7,7 +7,7 @@
   "scripts": {
   "start": "node server/server.js",
   "dev": "node --watch --env-file=.env server/server.js",
-  "test": "node --test --test-concurrency=1 --env-file=.env.test"
+  "test": "node --test --test-concurrency=1 --env-file-if-exists=.env.test"
   },
   "engines": {
     "node": ">=22"
