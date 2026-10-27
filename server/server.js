@@ -6,5 +6,5 @@ await runMigrations();
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
-  console.log("Node version:", process.version)
+  console.log("Node version:", process.version);
 });
